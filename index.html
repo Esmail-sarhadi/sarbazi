@@ -728,72 +728,48 @@
     // Preview functionality
     function showPreview(type) {
         const modal = document.getElementById('previewModal');
-        const content = document.getElementById('previewContent');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const previewFrame = document.getElementById('previewFrame');
+        const previewText = document.getElementById('previewText');
+        const actionBtn = document.getElementById('actionBtn');
 
         modal.classList.remove('hidden');
+        previewFrame.classList.add('hidden');
+        previewText.classList.add('hidden');
 
-        switch(type) {
+        switch (type) {
             case 'linkedin':
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold mb-6 text-right">لینکدین</h2>
-                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
-                        <i class="fab fa-linkedin text-5xl text-blue-600 mb-4"></i>
-                        <p class="text-lg mb-4">برای مشاهده پروفایل لینکدین روی دکمه زیر کلیک کنید</p>
-                        <a href="https://www.linkedin.com/in/esmail-sarhadi" target="_blank"
-                           class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold">
-                            مشاهده لینکدین
-                        </a>
-                    </div>
-                `;
-                downloadBtn.classList.add('hidden');
+                previewText.textContent = "در حال نمایش پروفایل لینکدین...";
+                previewText.classList.remove('hidden');
+                actionBtn.href = 'https://www.linkedin.com/in/esmail-sarhadi';
+                actionBtn.textContent = 'مشاهده پروفایل لینکدین';
+                actionBtn.target = '_blank';
                 break;
 
             case 'github':
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold mb-6 text-right">گیت‌هاب</h2>
-                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
-                        <i class="fab fa-github text-5xl text-gray-800 mb-4"></i>
-                        <p class="text-lg mb-4">برای مشاهده مخزن گیت‌هاب روی دکمه زیر کلیک کنید</p>
-                        <a href="https://github.com/esmail-sarhadi" target="_blank"
-                           class="px-6 py-3 bg-gray-800 text-white rounded-lg font-bold">
-                            مشاهده گیت‌هاب
-                        </a>
-                    </div>
-                `;
-                downloadBtn.classList.add('hidden');
+                previewText.textContent = "در حال نمایش پروفایل گیت‌هاب...";
+                previewText.classList.remove('hidden');
+                actionBtn.href = 'https://github.com/esmail-sarhadi';
+                actionBtn.textContent = 'مشاهده پروفایل گیت‌هاب';
+                actionBtn.target = '_blank';
                 break;
 
             case 'word':
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold mb-6 text-right">پروپوزال کامل</h2>
-                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
-                        <i class="far fa-file-word text-5xl text-blue-600 mb-4"></i>
-                        <p class="text-lg mb-4">برای مشاهده و دانلود پروپوزال کلیک کنید</p>
-                    </div>
-                `;
-                downloadBtn.href = 'pro.pdf';
-                downloadBtn.download = 'pro.pdf';
-                downloadBtn.textContent = 'دانلود فایل';
-                downloadBtn.classList.remove('hidden');
+                previewFrame.src = 'pro.pdf';  // نمایش فایل Word به صورت PDF
+                previewFrame.classList.remove('hidden');
+                actionBtn.href = 'pro.pdf';
+                actionBtn.download = 'pro.pdf';
+                actionBtn.textContent = 'دانلود پروپوزال';
                 break;
 
             case 'pdf':
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold mb-6 text-right">رزومه</h2>
-                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
-                        <i class="far fa-file-pdf text-5xl text-red-600 mb-4"></i>
-                        <p class="text-lg mb-4">برای مشاهده و دانلود رزومه کلیک کنید</p>
-                    </div>
-                `;
-                downloadBtn.href = 'resume.pdf';
-                downloadBtn.download = 'resume.pdf';
-                downloadBtn.textContent = 'دانلود فایل';
-                downloadBtn.classList.remove('hidden');
+                previewFrame.src = 'resume.pdf';
+                previewFrame.classList.remove('hidden');
+                actionBtn.href = 'resume.pdf';
+                actionBtn.download = 'resume.pdf';
+                actionBtn.textContent = 'دانلود رزومه';
                 break;
         }
     }
-
 
     function closePreview() {
         document.getElementById('previewModal').classList.add('hidden');
@@ -813,6 +789,7 @@
             closePreview();
         }
     });
+
 
 
 
