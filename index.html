@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم مدیریت هوشمند IoT صنعتی</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v27.2.2/dist/Vazir-Regular.woff2') format('woff2');
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+        }
+
+        body {
+            font-family: 'Vazir', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+            transform-origin: 0%;
+            z-index: 1000;
+        }
+
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-nav:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- نوار پیشرفت -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- 1. ناوبری -->
+    <nav class="fixed w-full bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg shadow-lg z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-blue-600">
+                    <i class="fas fa-microchip ml-2"></i>
+                    سیستم مدیریت هوشمند IoT
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#overview" class="text-gray-700 hover:text-blue-600 transition duration-300">نمای کلی</a>
+                    <a href="#features" class="text-gray-700 hover:text-blue-600 transition duration-300">ویژگی‌ها</a>
+                    <a href="#architecture" class="text-gray-700 hover:text-blue-600 transition duration-300">معماری</a>
+                    <a href="#technologies" class="text-gray-700 hover:text-blue-600 transition duration-300">تکنولوژی‌ها</a>
+                    <a href="#timeline" class="text-gray-700 hover:text-blue-600 transition duration-300">مراحل</a>
+                    <a href="#downloads" class="text-gray-700 hover:text-blue-600 transition duration-300">دانلود</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-gradient min-h-screen flex items-center pt-20">
+        <div class="container mx-auto px-6 py-20">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 text-white animate__animated animate__fadeInRight">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        مدیریت هوشمند تجهیزات صنعتی با IoT
+                    </h1>
+                    <p class="text-xl mb-8 text-blue-100 leading-relaxed">
+                        یک پلتفرم جامع و پیشرفته برای مدیریت، نظارت و کنترل تجهیزات صنعتی با استفاده از تکنولوژی‌های نوین IoT، هوش مصنوعی و پردازش ابری. این سیستم با قابلیت‌های پیشرفته مانیتورینگ بلادرنگ، پیش‌بینی خرابی‌ها و بهینه‌سازی مصرف انرژی، انقلابی در مدیریت تجهیزات صنعتی ایجاد می‌کند.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2">کاهش هزینه‌ها</h3>
+                            <p>تا 30٪ کاهش در هزینه‌های نگهداری و تعمیرات</p>
+                        </div>
+                        <div class="bg-white bg-opacity-10 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2">افزایش بهره‌وری</h3>
+                            <p>25٪ افزایش در کارایی عملیاتی تجهیزات</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#features" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition duration-300 transform hover:scale-105">
+                            <i class="fas fa-rocket ml-2"></i>
+                            مشاهده قابلیت‌ها
+                        </a>
+                        <a href="#introduction" class="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition duration-300 transform hover:scale-105">
+                            <i class="fas fa-info-circle ml-2"></i>
+                            درباره سیستم
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-12 md:mt-0 relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg transform rotate-6 scale-95 opacity-20"></div>
+                    <img src="iot.webp" alt="IoT Dashboard" class="relative rounded-lg shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="introduction" class="py-20 px-6 bg-white">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-8 section-title">چرا به این سیستم نیاز داریم؟</h2>
+                    <div class="prose max-w-none">
+                        <p class="mb-6 text-lg text-gray-700 leading-relaxed">
+                            در دنیای امروز، صنایع با چالش‌های متعددی در زمینه مدیریت و نگهداری تجهیزات مواجه هستند. خرابی‌های غیرمنتظره، هزینه‌های بالای نگهداری، و عدم بهره‌وری بهینه از تجهیزات، مشکلاتی هستند که نیاز به راه‌حلی هوشمند و کارآمد دارند.
+                        </p>
+                        <div class="bg-blue-50 p-6 rounded-xl mb-6">
+                            <h3 class="text-xl font-bold mb-4">مزایای کلیدی</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>کاهش 30٪ در هزینه‌های نگهداری و تعمیرات با پیش‌بینی هوشمند خرابی‌ها</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>افزایش 25٪ در بهره‌وری عملیاتی با بهینه‌سازی مصرف انرژی</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>کاهش 40٪ در زمان توقف تجهیزات با مانیتورینگ بلادرنگ</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="text-lg text-gray-700 leading-relaxed">
+                            این سیستم با ترکیب فناوری‌های پیشرفته IoT، هوش مصنوعی و پردازش ابری، راهکاری جامع برای مدیریت هوشمند تجهیزات صنعتی ارائه می‌دهد. با استفاده از این سیستم، می‌توانید به‌صورت بلادرنگ بر عملکرد تجهیزات نظارت کرده و از بروز مشکلات پیشگیری کنید.
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <img src="factory.jpg" alt="Factory Automation" class="rounded-xl shadow-lg mb-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">85%</div>
+                            <p class="text-gray-600">افزایش دقت در پیش‌بینی خرابی‌ها</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">24/7</div>
+                            <p class="text-gray-600">مانیتورینگ مداوم و هوشمند</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">50%</div>
+                            <p class="text-gray-600">کاهش مصرف انرژی</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600 mb-2">99.9%</div>
+                            <p class="text-gray-600">دسترس‌پذیری سیستم</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="overview" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 section-title">نمای کلی سیستم</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card p-8 rounded-xl feature-card">
+                    <div class="text-4xl text-blue-600 mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">امنیت پیشرفته</h3>
+                    <p class="text-gray-600">
+                        امنیت چند لایه با استفاده از رمزنگاری پیشرفته و سیستم‌های تشخیص نفوذ هوشمند
+                    </p>
+                </div>
+                <div class="card p-8 rounded-xl feature-card">
+                    <div class="text-4xl text-blue-600 mb-4">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">هوش مصنوعی</h3>
+                    <p class="text-gray-600">
+                        بهره‌گیری از الگوریتم‌های یادگیری ماشین برای پیش‌بینی و بهینه‌سازی عملکرد
+                    </p>
+                </div>
+                <div class="card p-8 rounded-xl feature-card">
+                    <div class="text-4xl text-blue-600 mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">تحلیل داده‌های بلادرنگ</h3>
+                    <p class="text-gray-600">
+                        پردازش و تحلیل لحظه‌ای داده‌ها برای تصمیم‌گیری سریع و دقیق
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 section-title">قابلیت‌های پیشرفته سیستم</h2>
+
+            <!-- Monitoring Features -->
+            <div class="mb-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">مانیتورینگ هوشمند و بلادرنگ</h3>
+                        <div class="prose max-w-none">
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                سیستم مانیتورینگ پیشرفته ما با استفاده از سنسورهای IoT و پردازش بلادرنگ داده‌ها، امکان نظارت دقیق بر تمامی پارامترهای عملکردی تجهیزات را فراهم می‌کند.
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>پارامترهای حیاتی مانند دما، فشار، و مصرف انرژی را به صورت لحظه‌ای پایش می‌کند</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>الگوهای غیرعادی در عملکرد تجهیزات را با استفاده از هوش مصنوعی شناسایی می‌کند</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 ml-2"></i>
+                                    <span>گزارش‌های تحلیلی و نمودارهای پیشرفته از عملکرد سیستم ارائه می‌دهد</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-200 rounded-lg transform rotate-3 scale-105"></div>
+                        <img src="dashboard.png" alt="Monitoring Dashboard" class="relative rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI & Predictive Maintenance -->
+            <div class="mb-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 lg:order-1 relative">
+                        <div class="absolute inset-0 bg-green-200 rounded-lg transform -rotate-3 scale-105"></div>
+                        <img src="AI.jpg" alt="AI Predictive Maintenance" class="relative rounded-lg shadow-lg">
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <h3 class="text-2xl font-bold mb-6">نگهداری پیشگیرانه با هوش مصنوعی</h3>
+                        <div class="prose max-w-none">
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                با استفاده از الگوریتم‌های پیشرفته یادگیری ماشین و هوش مصنوعی، سیستم ما قادر به پیش‌بینی خرابی‌های احتمالی قبل از وقوع آنهاست.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-3xl text-green-600 mb-2">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <h4 class="font-bold mb-2">تحلیل پیشرفته</h4>
+                                    <p class="text-gray-600">تحلیل الگوهای عملکردی و شناسایی نشانه‌های خرابی</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-3xl text-green-600 mb-2">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h4 class="font-bold mb-2">پیش‌بینی دقیق</h4>
+                                    <p class="text-gray-600">پیش‌بینی زمان دقیق نیاز به تعمیرات</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Energy Management -->
+            <div class="mb-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">مدیریت هوشمند انرژی</h3>
+                        <div class="prose max-w-none">
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                سیستم بهینه‌سازی مصرف انرژی ما با استفاده از الگوریتم‌های پیشرفته، مصرف انرژی را در تمام بخش‌ها بهینه می‌کند.
+                            </p>
+                            <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+                                <h4 class="font-bold mb-4">قابلیت‌های کلیدی</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-bolt text-yellow-500 ml-2"></i>
+                                        <span>مانیتورینگ لحظه‌ای مصرف انرژی</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-chart-pie text-blue-500 ml-2"></i>
+                                        <span>تحلیل الگوهای مصرف و شناسایی نقاط پرمصرف</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-lightbulb text-green-500 ml-2"></i>
+                                        <span>پیشنهادات هوشمند برای کاهش مصرف</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-yellow-200 rounded-lg transform rotate-2 scale-105"></div>
+                        <img src="management.jpg" alt="Energy Management" class="relative rounded-lg shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="py-20 px-6 bg-white">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 section-title">معماری فنی سیستم</h2>
+
+            <!-- System Architecture Overview -->
+            <div class="mb-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">معماری چند لایه و میکروسرویس</h3>
+                        <div class="prose max-w-none">
+                            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                                معماری سیستم ما بر پایه میکروسرویس‌ها طراحی شده که انعطاف‌پذیری، مقیاس‌پذیری و قابلیت اطمینان بالایی را تضمین می‌کند.
+                            </p>
+                            <div class="bg-blue-50 p-6 rounded-xl mb-6">
+                                <h4 class="font-bold mb-4">لایه‌های اصلی سیستم</h4>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center ml-3">
+                                            <i class="fas fa-network-wired text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold">لایه ارتباطات</h5>
+                                            <p>پروتکل‌های MQTT و WebSocket برای ارتباطات بلادرنگ و کارآمد</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center ml-3">
+                                            <i class="fas fa-database text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold">لایه داده</h5>
+                                            <p>ذخیره‌سازی توزیع‌شده با MongoDB و Redis</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center ml-3">
+                                            <i class="fas fa-brain text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold">لایه پردازش</h5>
+                                            <p>پردازش بلادرنگ داده‌ها با Apache Kafka و Spark</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-100 rounded-lg transform rotate-2"></div>
+                        <img src="arti.png" alt="System Architecture" class="relative rounded-lg shadow-xl">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication Protocols -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-bold mb-8">پروتکل‌های ارتباطی</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <div class="text-4xl text-blue-600 mb-4">
+                            <i class="fas fa-broadcast-tower"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4">MQTT</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• مصرف بهینه پهنای باند</li>
+                            <li>• قابلیت اطمینان بالا</li>
+                            <li>• پشتیبانی از QoS</li>
+                            <li>• مناسب برای IoT</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <div class="text-4xl text-blue-600 mb-4">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4">WebSocket</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• ارتباط دوطرفه</li>
+                            <li>• تأخیر کم</li>
+                            <li>• مناسب برای داشبورد</li>
+                            <li>• پشتیبانی از رویدادها</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <div class="text-4xl text-blue-600 mb-4">
+                            <i class="fas fa-code-branch"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-4">REST API</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• استاندارد و ساده</li>
+                            <li>• قابلیت کش‌سازی</li>
+                            <li>• مستندات OpenAPI</li>
+                            <li>• یکپارچه‌سازی آسان</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technologies Section -->
+            <section id="technologies" class="py-20 px-6 bg-gray-50">
+                <div class="container mx-auto">
+                    <h2 class="text-3xl font-bold text-center mb-16 section-title">تکنولوژی‌های مورد استفاده</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Backend Technologies -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-3xl text-blue-600 mb-4">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">بک‌اند</h4>
+                            <ul class="space-y-2">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" class="w-6 h-6 ml-2">
+                                    Node.js
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="w-6 h-6 ml-2">
+                                    Python
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg" alt="Go" class="w-6 h-6 ml-2">
+                                    Go
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Database Technologies -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-3xl text-blue-600 mb-4">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">پایگاه داده</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="w-6 h-6 ml-2">
+                                    MongoDB
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" class="w-6 h-6 ml-2">
+                                    Redis
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://www.vectorlogo.zone/logos/influxdata/influxdata-icon.svg" alt="InfluxDB" class="w-6 h-6 ml-2">
+                                    InfluxDB
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Frontend Technologies -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-3xl text-blue-600 mb-4">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">فرانت‌اند</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" class="w-6 h-6 ml-2">
+                                    React
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" alt="Redux" class="w-6 h-6 ml-2">
+                                    Redux
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" alt="Tailwind" class="w-6 h-6 ml-2">
+                                    Tailwind CSS
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- DevOps Technologies -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-3xl text-blue-600 mb-4">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">DevOps</h4>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" class="w-6 h-6 ml-2">
+                                    Docker
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="Kubernetes" class="w-6 h-6 ml-2">
+                                    Kubernetes
+                                </li>
+                                <li class="flex items-center">
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" alt="Jenkins" class="w-6 h-6 ml-2">
+                                    Jenkins
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <section id="timeline" class="py-20 px-6 bg-gray-100 relative">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 section-title">مراحل اجرای پروژه</h2>
+            <div class="relative">
+                <div class="absolute w-1 bg-gradient-to-b from-blue-500 to-purple-500 top-0 bottom-0 left-1/2 transform -translate-x-1/2"></div>
+                <div class="timeline relative">
+                    <div class="absolute w-6 h-6 bg-red-500 rounded-full border-4 border-white animate-marker" id="timeline-marker"></div>
+
+                    <div class="timeline-item flex items-center mb-10">
+                        <div class="w-1/2 pr-8 text-right">
+                            <div class="card bg-blue-100 p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold mb-2">فاز اول: تحلیل و طراحی</h3>
+                                <p class="text-gray-600">بررسی نیازمندی‌ها و طراحی معماری سیستم</p>
+                            </div>
+                        </div>
+                        <div class="w-1/12 flex justify-center">
+                            <div class="w-6 h-6 bg-blue-500 rounded-full border-4 border-white"></div>
+                        </div>
+                        <div class="w-1/2"></div>
+                    </div>
+
+                    <div class="timeline-item flex items-center mb-10">
+                        <div class="w-1/2"></div>
+                        <div class="w-1/12 flex justify-center">
+                            <div class="w-6 h-6 bg-green-500 rounded-full border-4 border-white"></div>
+                        </div>
+                        <div class="w-1/2 pl-8 text-left">
+                            <div class="card bg-green-100 p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold mb-2">فاز دوم: توسعه زیرساخت</h3>
+                                <p class="text-gray-600">پیاده‌سازی معماری پایه و زیرساخت‌های اصلی</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item flex items-center mb-10">
+                        <div class="w-1/2 pr-8 text-right">
+                            <div class="card bg-yellow-100 p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold mb-2">فاز سوم: توسعه هوش مصنوعی</h3>
+                                <p class="text-gray-600">پیاده‌سازی الگوریتم‌های یادگیری ماشین و بهینه‌سازی</p>
+                            </div>
+                        </div>
+                        <div class="w-1/12 flex justify-center">
+                            <div class="w-6 h-6 bg-yellow-500 rounded-full border-4 border-white"></div>
+                        </div>
+                        <div class="w-1/2"></div>
+                    </div>
+
+                    <div class="timeline-item flex items-center">
+                        <div class="w-1/2"></div>
+                        <div class="w-1/12 flex justify-center">
+                            <div class="w-6 h-6 bg-red-500 rounded-full border-4 border-white"></div>
+                        </div>
+                        <div class="w-1/2 pl-8 text-left">
+                            <div class="card bg-red-100 p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold mb-2">فاز چهارم: تست و استقرار</h3>
+                                <p class="text-gray-600">آزمایش جامع و بهینه‌سازی عملکرد</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            @keyframes move-marker {
+                0%, 100% { top: 0%; }
+                25% { top: 33%; }
+                50% { top: 66%; }
+                75% { top: 100%; }
+            }
+            .animate-marker {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                animation: move-marker 4s infinite alternate ease-in-out;
+            }
+        </style>
+    </section>
+
+
+    <!-- Downloads Section -->
+    <section id="downloads" class="py-20 px-6 bg-gray-50">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 section-title">دانلود و لینک‌ها</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card p-8 rounded-xl text-center hover:bg-blue-50 transition duration-300 cursor-pointer" onclick="showPreview('word')">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="far fa-file-word text-3xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">پروپوزال کامل</h3>
+                    <p class="text-gray-600 text-sm">مشاهده و دانلود نسخه Word</p>
+                </div>
+                <div class="card p-8 rounded-xl text-center hover:bg-blue-50 transition duration-300 cursor-pointer" onclick="showPreview('pdf')">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="far fa-file-pdf text-3xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">رزومه</h3>
+                    <p class="text-gray-600 text-sm">مشاهده و دانلود نسخه PDF</p>
+                </div>
+                <div class="card p-8 rounded-xl text-center hover:bg-blue-50 transition duration-300 cursor-pointer" onclick="showPreview('github')">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fab fa-github text-3xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">گیت‌هاب</h3>
+                    <p class="text-gray-600 text-sm">مشاهده کد پروژه</p>
+                </div>
+                <div class="card p-8 rounded-xl text-center hover:bg-blue-50 transition duration-300 cursor-pointer" onclick="showPreview('linkedin')">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fab fa-linkedin text-3xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">لینکدین</h3>
+                    <p class="text-gray-600 text-sm">پروفایل حرفه‌ای</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 shadow-lg relative">
+            <button onclick="closePreview()" class="absolute top-2 left-2 text-gray-600 text-2xl">&times;</button>
+            <div id="previewContent" class="text-center">
+                <h2 class="text-2xl font-bold mb-4">پیش نمایش</h2>
+                <iframe id="previewFrame" class="w-full h-96 border hidden"></iframe>
+                <p id="previewText" class="text-lg hidden"></p>
+            </div>
+            <a id="actionBtn" class="block mt-4 bg-blue-600 text-white py-2 px-4 rounded text-center cursor-pointer">
+                مشاهده کامل
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">درباره پروژه</h3>
+                    <p class="text-gray-400">
+                        سیستم مدیریت هوشمند IoT صنعتی، راهکاری جامع برای نظارت، کنترل و بهینه‌سازی تجهیزات در محیط‌های صنعتی
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">لینک‌های مفید</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="#features" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fas fa-chevron-left ml-1"></i>
+                                ویژگی‌های سیستم
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#architecture" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fas fa-chevron-left ml-1"></i>
+                                معماری سیستم
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#technologies" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fas fa-chevron-left ml-1"></i>
+                                تکنولوژی‌ها
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#downloads" class="text-gray-400 hover:text-white transition duration-300">
+                                <i class="fas fa-chevron-left ml-1"></i>
+                                دانلود و لینک‌ها
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Navigation -->
+    <div class="floating-nav hidden md:block">
+        <div class="flex flex-col space-y-4">
+            <a href="#" class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-blue-700 transition duration-300">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 13. اسکریپت‌ها -->
+    <script>
+    // Preview functionality
+    function showPreview(type) {
+        const modal = document.getElementById('previewModal');
+        const content = document.getElementById('previewContent');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        modal.classList.remove('hidden');
+
+        switch(type) {
+            case 'linkedin':
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-right">لینکدین</h2>
+                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                        <i class="fab fa-linkedin text-5xl text-blue-600 mb-4"></i>
+                        <p class="text-lg mb-4">برای مشاهده پروفایل لینکدین روی دکمه زیر کلیک کنید</p>
+                        <a href="https://www.linkedin.com/in/esmail-sarhadi" target="_blank"
+                           class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold">
+                            مشاهده لینکدین
+                        </a>
+                    </div>
+                `;
+                downloadBtn.classList.add('hidden');
+                break;
+
+            case 'github':
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-right">گیت‌هاب</h2>
+                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                        <i class="fab fa-github text-5xl text-gray-800 mb-4"></i>
+                        <p class="text-lg mb-4">برای مشاهده مخزن گیت‌هاب روی دکمه زیر کلیک کنید</p>
+                        <a href="https://github.com/esmail-sarhadi" target="_blank"
+                           class="px-6 py-3 bg-gray-800 text-white rounded-lg font-bold">
+                            مشاهده گیت‌هاب
+                        </a>
+                    </div>
+                `;
+                downloadBtn.classList.add('hidden');
+                break;
+
+            case 'word':
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-right">پروپوزال کامل</h2>
+                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                        <i class="far fa-file-word text-5xl text-blue-600 mb-4"></i>
+                        <p class="text-lg mb-4">برای مشاهده و دانلود پروپوزال کلیک کنید</p>
+                    </div>
+                `;
+                downloadBtn.href = 'pro.pdf';
+                downloadBtn.download = 'pro.pdf';
+                downloadBtn.textContent = 'دانلود فایل';
+                downloadBtn.classList.remove('hidden');
+                break;
+
+            case 'pdf':
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-right">رزومه</h2>
+                    <div class="bg-gray-100 p-8 rounded-lg text-center mb-6">
+                        <i class="far fa-file-pdf text-5xl text-red-600 mb-4"></i>
+                        <p class="text-lg mb-4">برای مشاهده و دانلود رزومه کلیک کنید</p>
+                    </div>
+                `;
+                downloadBtn.href = 'resume.pdf';
+                downloadBtn.download = 'resume.pdf';
+                downloadBtn.textContent = 'دانلود فایل';
+                downloadBtn.classList.remove('hidden');
+                break;
+        }
+    }
+
+
+    function closePreview() {
+        document.getElementById('previewModal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.preview-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                showPreview(this.dataset.type);
+            });
+        });
+    });
+
+    document.getElementById('previewModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closePreview();
+        }
+    });
+
+
+
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.transform = "scaleX(" + scrolled / 100 + ")";
+    };
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('.card').forEach(card => {
+        gsap.from(card, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: card,
+                start: "top bottom-=100",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
+
+    gsap.utils.toArray('.timeline-item').forEach(item => {
+        gsap.from(item, {
+            x: item.classList.contains('left') ? -100 : 100,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: item,
+                start: "top bottom-=100",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero-gradient');
+        const speed = 0.5;
+        hero.style.backgroundPositionY = -(scrolled * speed) + 'px';
+    });
+
+    gsap.utils.toArray('.tech-item').forEach((item, i) => {
+        gsap.from(item, {
+            y: 50,
+            opacity: 0,
+            duration: 0.5,
+            delay: i * 0.1,
+            scrollTrigger: {
+                trigger: '.tech-stack',
+                start: "top bottom-=100",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
+
+    gsap.utils.toArray('.section-title').forEach(title => {
+        gsap.from(title, {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: title,
+                start: "top bottom-=100",
+                toggleActions: "play none none reverse"
+            }
+        });
+    });
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            gsap.to(this, {
+                y: -10,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+
+        card.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                y: 0,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+        });
+    });
+</script>
+</body>
+</html>
